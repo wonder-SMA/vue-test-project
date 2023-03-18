@@ -1,7 +1,7 @@
 <script>
 import { nextTick } from 'vue';
 import { getObserver } from '../utils/getObserver.js';
-import fetchData from './../api';
+import { getData, createData } from './../api';
 
 export default {
   name: 'PostsWithOptionsAPI',
@@ -27,9 +27,10 @@ export default {
   },
 
   methods: {
-    async fetchPosts(page) {
+    async getPosts(page) {
       try {
-        const { data: posts, count: totalPages } = await fetchData(page, this.limit);
+        this.isFetched = false;
+        const { data: posts, count: totalPages } = await getData(page, this.limit);
         this.posts = this.isFeed ? this.posts.concat(posts) : posts;
         this.totalPages = totalPages;
       } catch (e) {
@@ -43,9 +44,15 @@ export default {
       }
     },
 
-    createPost(post) {
+    async createPost(post) {
       this.isOpen = false;
-      this.posts.push(post);
+      post.userId = Date.now();
+      try {
+        const data = await createData(post);
+        this.posts.push(data);
+      } catch (e) {
+        console.error(`Error: ${e.message}`);
+      }
     },
 
     deletePost(id) {
@@ -56,8 +63,9 @@ export default {
       const page = +event.target.innerText;
       if (this.currentPage !== page) {
         this.currentPage = page;
-        this.fetchPosts(page);
+        this.getPosts(page);
       }
+      window.scrollTo(0, 0);
     },
 
     setSearchQuery(searchQuery) {
@@ -90,7 +98,7 @@ export default {
 
     isFeed() {
       if (this.isFeed && this.currentPage < this.totalPages) {
-        this.observer = getObserver(this.fetchPosts, this.currentPage + 1);
+        this.observer = getObserver(this.getPosts, this.currentPage + 1);
         this.observer.observe(this.lastPost);
       } else {
         this.observer.disconnect();
@@ -101,10 +109,10 @@ export default {
       nextTick().then(() => {
         if (this.currentPage < this.totalPages) {
           const listElements = this.$refs.postRefs.$el.children;
-          this.lastPost = listElements[listElements.length - 2];
+          this.lastPost = listElements[listElements.length - 1];
 
           if (this.isFeed) {
-            this.observer = getObserver(this.fetchPosts, this.currentPage + 1);
+            this.observer = getObserver(this.getPosts, this.currentPage + 1);
             this.observer.observe(this.lastPost);
           }
         }
@@ -113,11 +121,13 @@ export default {
   },
 
   created() {
-    this.fetchPosts(this.currentPage);
+    this.getPosts(this.currentPage);
   },
 
   unmounted() {
-    this.observer.disconnect();
+    if (this.observer) {
+      this.observer.disconnect();
+    }
   }
 };
 </script>
@@ -139,11 +149,11 @@ export default {
     </my-dialog>
     <post-list
         ref="postRefs"
-        v-if="isFetched"
+        v-show="!isFetched ? isFeed : true"
         :posts="foundPosts"
         @delete="deletePost"
     />
-    <div v-else class="upload-indicator">
+    <div v-show="!isFetched" class="upload-indicator">
       <my-spinner />
     </div>
     <div class="pagination">

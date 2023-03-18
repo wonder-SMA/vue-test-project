@@ -1,6 +1,4 @@
 <script>
-import { router } from '../router/router.js';
-
 export default {
   name: 'PostItem',
 
@@ -11,20 +9,6 @@ export default {
       title: String,
       body: String,
       required: true
-    }
-  },
-
-  emits: {
-    delete: null
-  },
-
-  methods: {
-    open(id) {
-      router.push(`/posts/${id}`);
-    },
-
-    delete(id) {
-      this.$emit('delete', id);
     }
   },
 };
@@ -38,8 +22,7 @@ export default {
       <div><b>Description: </b>{{ post.body }}</div>
     </div>
     <div class="post__buttons">
-      <my-button @click="open(post.id)">Open</my-button>
-      <my-button @click="this.delete(post.id)">Delete</my-button>
+      <slot />
     </div>
   </div>
 </template>
@@ -54,6 +37,7 @@ export default {
 
 .post__content {
   margin-right: 20px;
+  line-height: 1.25em;
 }
 
 .post__buttons {

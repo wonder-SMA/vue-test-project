@@ -18,8 +18,6 @@ export default {
   methods: {
     submit() {
       if (this.post.title && this.post.body) {
-        this.post.id = Date.now();
-        this.post.userId = 'User-' + this.post.id;
         this.$emit('create', { ...this.post });
         this.post.title = '';
         this.post.body = '';

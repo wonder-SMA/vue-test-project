@@ -1,6 +1,10 @@
 <script>
+import { router } from '../router/router.js';
+import PostItem from './PostItem.vue';
+
 export default {
   name: 'PostList',
+  components: { PostItem },
 
   props: {
     posts: {
@@ -14,10 +18,14 @@ export default {
   },
 
   methods: {
+    open(id) {
+      router.push(`/posts/${id}`);
+    },
+
     delete(id) {
       this.$emit('delete', id);
     }
-  }
+  },
 };
 </script>
 
@@ -30,7 +38,10 @@ export default {
         :post="post"
         :key="post.id"
         @delete="this.delete"
-    />
+    >
+      <my-button @click="open(post.id)">Open</my-button>
+      <my-button @click="this.delete(post.id)">Delete</my-button>
+    </post-item>
   </section>
   <h2 v-else class="empty-list">Post list is empty!</h2>
 </template>
