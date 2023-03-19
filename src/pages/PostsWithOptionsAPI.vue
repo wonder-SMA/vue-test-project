@@ -133,40 +133,37 @@ export default {
 </script>
 
 <template>
-  <div>
-    <h1>Posts</h1>
-    <div class="menu">
-      <my-button class="create-post" @click="isOpen = true">Create post</my-button>
-      <my-search :delay="delay" @search="setSearchQuery" />
-      <my-switcher :isChecked="isFeed" @change="setIsFeed" />
-      <my-select
-          v-model="selectedSort"
-          :options="sortOptions"
-      />
-    </div>
-    <my-dialog v-model="isOpen">
-      <post-form @create="createPost" />
-    </my-dialog>
-    <post-list
-        ref="postRefs"
-        v-show="!isFetched ? isFeed : true"
-        :posts="foundPosts"
-        @delete="deletePost"
+  <div class="menu">
+    <my-button class="create-post" @click="isOpen = true">Create post</my-button>
+    <my-search :delay="delay" @search="setSearchQuery" />
+    <my-switcher :isChecked="isFeed" @change="setIsFeed" />
+    <my-select
+        v-model="selectedSort"
+        :options="sortOptions"
     />
-    <div v-show="!isFetched" class="upload-indicator">
-      <my-spinner />
-    </div>
-    <div class="pagination">
-      <div
-          v-show="isFetched && !isFeed"
-          v-for="page in totalPages"
-          :key="page"
-          class="page"
-          :class="page === currentPage && 'current-page'"
-          @click="setCurrentPage"
-      >
-        {{ page }}
-      </div>
+  </div>
+  <my-dialog v-model="isOpen">
+    <post-form @create="createPost" />
+  </my-dialog>
+  <post-list
+      ref="postRefs"
+      v-show="!isFetched ? isFeed : true"
+      :posts="foundPosts"
+      @delete="deletePost"
+  />
+  <div v-show="!isFetched" class="upload-indicator">
+    <my-spinner />
+  </div>
+  <div class="pagination">
+    <div
+        v-show="isFetched && !isFeed && foundPosts.length"
+        v-for="page in totalPages"
+        :key="page"
+        class="page"
+        :class="page === currentPage && 'current-page'"
+        @click="setCurrentPage"
+    >
+      {{ page }}
     </div>
   </div>
 </template>
@@ -194,6 +191,7 @@ export default {
 
 .page {
   padding: 4px;
+  font-family: Segoe UI, Arial, sans-serif;
   cursor: pointer;
 }
 

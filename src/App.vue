@@ -16,10 +16,6 @@ html {
   box-sizing: border-box;
 }
 
-body {
-  background: rgb(233, 235, 235);
-}
-
 *, *::before, *::after {
   box-sizing: inherit;
   margin: 0;

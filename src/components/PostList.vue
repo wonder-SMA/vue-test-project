@@ -31,7 +31,7 @@ export default {
 
 <template>
   <section v-if="posts.length" class="posts">
-    <h2>Post list</h2>
+    <h1>Post list</h1>
     <post-item
         class="post"
         v-for="post in posts"
@@ -43,7 +43,7 @@ export default {
       <my-button @click="this.delete(post.id)">Delete</my-button>
     </post-item>
   </section>
-  <h2 v-else class="empty-list">Post list is empty!</h2>
+  <h1 v-else class="empty-list">Post list is empty!</h1>
 </template>
 
 <style scoped>
@@ -53,8 +53,6 @@ export default {
   flex-direction: column;
   align-self: center;
   align-items: center;
-  padding: 12px;
-  border: 2px solid darksalmon;
 }
 
 .empty-list {

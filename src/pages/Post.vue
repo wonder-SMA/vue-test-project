@@ -35,17 +35,31 @@ export default {
 </script>
 
 <template>
-  <h1>Post page with ID: {{ $route.params.id }}</h1>
-  <section>
-    <post-item
-        v-if="isFetched"
-        class="post"
-        :post="post"
-    >
+  <section v-if="isFetched" class="post">
+    <h1>Post page with ID: {{ $route.params.id }}</h1>
+    <post-item :post="post">
       <my-button @click="goBack()">Back</my-button>
     </post-item>
-    <div v-else class="upload-indicator">
-      <my-spinner />
-    </div>
   </section>
+  <div v-else class="upload-indicator">
+    <my-spinner />
+  </div>
 </template>
+
+<style scoped>
+.post {
+  max-width: 1024px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+}
+
+.upload-indicator {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

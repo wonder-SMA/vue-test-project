@@ -15,13 +15,14 @@ export default {
         '#4299E1',
         '#667EEA',
         '#9F7AEA',
-        '#008b8bff'
+        '#008b8b'
       ]
     };
   },
 
   mounted() {
     let idx = 0;
+    this.$refs.circle.style.stroke = this.colors.at(-1);
     this.interval = setInterval(() => {
       this.$refs.circle.style.stroke = this.colors[idx++];
       if (idx === this.colors.length) {
@@ -82,11 +83,10 @@ export default {
   transition: stroke 0.3s linear;
   display: block;
   fill: transparent;
-  stroke: #008b8bff;
   stroke-linecap: round;
   stroke-dasharray: 280;
   stroke-dashoffset: 280;
-  stroke-width: 10px;
+  stroke-width: 6px;
   transform-origin: 50% 50%;
 }
 
